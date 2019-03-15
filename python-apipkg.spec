@@ -22,7 +22,7 @@ BuildRequires:  python-setuptools_scm
 %if %{with_python2}
 BuildRequires:  python2-devel
 BuildRequires:  python2-setuptools
-BuildRequires:  python-setuptools_scm
+BuildRequires:  python2-setuptools_scm
 %endif # if with_python2
 
 
