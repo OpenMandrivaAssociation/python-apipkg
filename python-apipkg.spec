@@ -5,15 +5,15 @@
 %define version 1.5
 
 Name:           python-%{pypi_name}
-Version:        %{version}
-Release:        2
+Version:	2.1.0
+Release:	1
 Group:          Development/Python
 Summary:        Control the exported namespace of a Python package
 
 License:        MIT
 Url:            https://github.com/pytest-dev/apipkg
 # See also      https://github.com/pypa/setuptools_scm
-Source0:        https://files.pythonhosted.org/packages/a8/af/07a13b1560ebcc9bf4dd439aeb63243cbd8d374f4f328691470d6a9b9804/%{pypi_name}-%{version}.tar.gz
+Source0:	https://files.pythonhosted.org/packages/46/90/c54454c5f87ae7c754626cdc71499f6c1b3d7cdd13a4a7f27a20e05a1ad3/apipkg-2.1.0.tar.gz
 BuildArch:      noarch
 BuildRequires:  python3-devel
 BuildRequires:  python-setuptools
