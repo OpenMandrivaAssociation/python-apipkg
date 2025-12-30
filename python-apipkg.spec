@@ -6,7 +6,7 @@
 
 Name:           python-%{pypi_name}
 Version:	2.1.0
-Release:	3
+Release:	4
 Group:          Development/Python
 Summary:        Control the exported namespace of a Python package
 
