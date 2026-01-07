@@ -1,85 +1,52 @@
-# Created by pyp2rpm-2.0.0
-%global pypi_name apipkg
-#%%define tarname setuptools-scm
-%global with_python2 1
-%define version 1.5
+%global module apipkg
+%bcond tests 1
 
-Name:           python-%{pypi_name}
-Version:	2.1.0
-Release:	4
-Group:          Development/Python
-Summary:        Control the exported namespace of a Python package
+Name:		python-apipkg
+Version:	3.0.2
+Release:	1
+Group:		Development/Python
+Summary:	Control the exported namespace of a Python package
+License:	MIT
+URL:		https://github.com/pytest-dev/apipkg
+Source0:	https://github.com/pytest-dev/apipkg/archive/v%{version}/%{module}-%{version}.tar.gz#/%{name}-%{version}.tar.gz
+# See for patch info: https://github.com/pytest-dev/apipkg/pull/58
+Patch0:		support-pytest9.patch
 
-License:        MIT
-Url:            https://github.com/pytest-dev/apipkg
-# See also      https://github.com/pypa/setuptools_scm
-Source0:	https://files.pythonhosted.org/packages/46/90/c54454c5f87ae7c754626cdc71499f6c1b3d7cdd13a4a7f27a20e05a1ad3/apipkg-2.1.0.tar.gz
-BuildArch:      noarch
-BuildRequires:  python3-devel
-BuildRequires:  python-setuptools
-BuildRequires:  python-setuptools_scm
- 
-%if %{with_python2}
-BuildRequires:  python2-devel
-BuildRequires:  python2-setuptools
-BuildRequires:  python2-setuptools_scm
-%endif # if with_python2
-
+BuildSystem:	python
+BuildArch:		noarch
+BuildRequires:	python
+BuildRequires:	pkgconfig(python)
+BuildRequires:	python%{pyver}dist(hatchling)
+BuildRequires:	python%{pyver}dist(hatch-vcs)
+BuildRequires:	python%{pyver}dist(pip)
+BuildRequires:	python%{pyver}dist(setuptools)
+BuildRequires:	python%{pyver}dist(wheel)
+%if %{with tests}
+BuildRequires:	python%{pyver}dist(pytest)
+%endif
 
 %description
 With apipkg you can control the exported namespace of a Python package and greatly reduce the number of imports for your users. It is a small pure Python module that works on CPython 2.7 and 3.4+, Jython and PyPy. It cooperates well with Python’s help() system, custom importers (PEP302) and common command-line completion tools.
 
-%if %{with_python2}
-%package -n     python2-%{pypi_name}
-Summary:        Control the exported namespace of a Python package 
-
-%description -n python2-%{pypi_name}
-With apipkg you can control the exported namespace of a Python package and greatly reduce the number of imports for your users. It is a small pure Python module that works on CPython 2.7 and 3.4+, Jython and PyPy. It cooperates well with Python’s help() system, custom importers (PEP302) and common command-line completion tools.
-
-%endif # with_python2
-
-
 %prep
-%setup -q -n %{pypi_name}-%{version}
-
-%if %{with_python2}
-rm -rf %{py2dir}
-cp -a . %{py2dir}
-find %{py2dir} -name '*.py' | xargs sed -i '1s|^#!python|#!%{__python2}|'
-%endif # with_python2
-
+%autosetup -n %{module}-%{version} -p1
 
 %build
-%{__python} setup.py build
-
-%if %{with_python2}
-pushd %{py2dir}
-%{__python2} setup.py build
-popd
-%endif # with_python2
-
+export SETUPTOOLS_SCM_PRETEND_VERSION="%{version}"
+%py_build
 
 %install
+%py_install
 
-%if %{with_python2}
-pushd %{py2dir}
-%{__python2} setup.py install --skip-build --root %{buildroot}
-popd
-%endif # with_python2
-
-%{__python} setup.py install --skip-build --root %{buildroot}
-
+%if %{with tests}
+export CI=true
+export PYTHONPATH="%{buildroot}%{python_sitelib}:${PWD}"
+pytest -v
+#-k 'not test_get_distribution_version'
+%endif
 
 %files
-%doc  README.rst LICENSE
-%{python_sitelib}/*/*
-#%%{python_sitelib}/pep8.py
-
-
-%if %{with_python2}
-%files -n python2-%{pypi_name}
-%doc  README.rst LICENSE
-%{python2_sitelib}/*/*
-#%%{python2_sitelib}/pep8.*
-%endif # with_python2
-
+%doc  README.rst
+%license LICENSE
+%{python_sitelib}/%{module}
+%{python_sitelib}/%{module}-%{version}.dist-info
