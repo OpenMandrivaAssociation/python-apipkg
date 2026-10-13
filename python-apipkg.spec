@@ -3,7 +3,7 @@
 
 Name:		python-apipkg
 Version:	3.0.2
-Release:	1
+Release:	2
 Group:		Development/Python
 Summary:	Control the exported namespace of a Python package
 License:	MIT
@@ -15,7 +15,7 @@ Patch0:		support-pytest9.patch
 BuildSystem:	python
 BuildArch:		noarch
 BuildRequires:	python
-BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python3)
 BuildRequires:	python%{pyver}dist(hatchling)
 BuildRequires:	python%{pyver}dist(hatch-vcs)
 BuildRequires:	python%{pyver}dist(pip)
